@@ -6,27 +6,44 @@ def emotion_detector(text_to_analyze):
     payload = { "raw_document": { "text": text_to_analyze } } 
     response = requests.post(url, headers=header, json=payload)
     
-    emotions_dict = json.loads(response.text)
-    anger_score = emotions_dict['emotionPredictions'][0]['emotion']['anger']
-    disgust_score = emotions_dict['emotionPredictions'][0]['emotion']['disgust']
-    fear_score = emotions_dict['emotionPredictions'][0]['emotion']['fear']
-    joy_score = emotions_dict['emotionPredictions'][0]['emotion']['joy']
-    sadness_score = emotions_dict['emotionPredictions'][0]['emotion']['sadness']
+    if response.status_code == 200:
+        emotions_dict = json.loads(response.text)
+        anger_score = emotions_dict['emotionPredictions'][0]['emotion']['anger']
+        disgust_score = emotions_dict['emotionPredictions'][0]['emotion']['disgust']
+        fear_score = emotions_dict['emotionPredictions'][0]['emotion']['fear']
+        joy_score = emotions_dict['emotionPredictions'][0]['emotion']['joy']
+        sadness_score = emotions_dict['emotionPredictions'][0]['emotion']['sadness']
 
-    largest_emotion_score = max(anger_score, disgust_score, fear_score, joy_score, sadness_score)  
-    dominant_emotion_name = ''
-    if largest_emotion_score == anger_score:
-        dominant_emotion_name = 'anger'
-    elif largest_emotion_score == disgust_score:
-        dominant_emotion_name = 'disgust'        
-    elif largest_emotion_score == fear_score:
-        dominant_emotion_name = 'fear'        
-    elif largest_emotion_score == joy_score:
-        dominant_emotion_name = 'joy'        
-    elif largest_emotion_score == sadness_score:
-        dominant_emotion_name = 'sadness'        
+        largest_emotion_score = max(anger_score, disgust_score, fear_score, joy_score, sadness_score)  
+        dominant_emotion_name = ''
+        if largest_emotion_score == anger_score:
+            dominant_emotion_name = 'anger'
+        elif largest_emotion_score == disgust_score:
+            dominant_emotion_name = 'disgust'        
+        elif largest_emotion_score == fear_score:
+            dominant_emotion_name = 'fear'        
+        elif largest_emotion_score == joy_score:
+            dominant_emotion_name = 'joy'        
+        elif largest_emotion_score == sadness_score:
+            dominant_emotion_name = 'sadness'        
+        else:
+            dominant_emotion_name = 'none' 
+
+    elif response.status_code == 400:
+        anger_score = None
+        disgust_score = None
+        fear_score = None
+        joy_score = None
+        sadness_score = None
+        dominant_emotion_name = None
+
     else:
-        dominant_emotion_name = 'none'        
+        anger_score = None
+        disgust_score = None
+        fear_score = None
+        joy_score = None
+        sadness_score = None
+        dominant_emotion_name = None
     
     return {
         'anger': anger_score,

@@ -19,8 +19,19 @@ def sent_detector():
     sadness_score = response['sadness'] 
     dominant_emotion_name = response['dominant_emotion']
 
-    # Return a formatted string with the emotion scores and the dominant emotion 
-    return "For the given statement, the system response is 'anger': {}, 'disgust': {}, 'fear': {}, 'joy': {} and 'sadness': {}. The dominant emotion is {}.".format(anger_score, disgust_score, fear_score, joy_score, sadness_score, dominant_emotion_name)
+    # Check if the one of variables assigned from response is None, indicating an error or invalid input
+    if any(emotion is None for emotion in (
+        anger_score,
+        disgust_score,
+        fear_score,
+        joy_score,
+        sadness_score,
+        dominant_emotion_name
+    )):
+        return "Invalid text! Please try again!"
+    else:
+        # Return a formatted string with the emotion scores and the dominant emotion 
+        return "For the given statement, the system response is 'anger': {}, 'disgust': {}, 'fear': {}, 'joy': {} and 'sadness': {}. The dominant emotion is {}.".format(anger_score, disgust_score, fear_score, joy_score, sadness_score, dominant_emotion_name)
 
 @app.route("/") 
 def render_index_page(): 
